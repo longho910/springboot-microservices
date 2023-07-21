@@ -2,6 +2,7 @@ package com.longho.employeeservice.service.impl;
 
 import com.longho.employeeservice.dto.EmployeeDto;
 import com.longho.employeeservice.entity.Employee;
+import com.longho.employeeservice.exception.ResourceNotFoundException;
 import com.longho.employeeservice.repository.EmployeeRepository;
 import com.longho.employeeservice.service.EmployeeService;
 import lombok.AllArgsConstructor;
@@ -24,7 +25,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public EmployeeDto getEmployeeById(Long id) {
-        Employee employee = employeeRepository.findById(id).get();
+        Employee employee = employeeRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Employee not found with id: " + id)
+        );
         return modelMapper.map(employee, EmployeeDto.class);
     }
 }
